@@ -14,7 +14,7 @@ Usage:
     kg --removecache
 
 Arguments:
-    FILE                    infile to add KEGG data to (supports piping with -)
+    FILE                    infile to add KEGG data to (read STDIN with -)
     -s SPEC --species=SPEC  name of species (examples: hsa, mmu, rno...)
     -m COL --mergecol=COL   column (0-indexed int or name) containing gene names
 

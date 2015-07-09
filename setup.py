@@ -4,7 +4,7 @@ setup(
     name = "kg",
     packages = ["kegg"],
     scripts = ["bin/kg"],
-    version = "0.0.1",
+    version = "0.0.2",
     description = "Access KEGG from the command line.",
     author = "Endre Bakken Stovner",
     author_email = "endrebak@stud.ntnu.no",
