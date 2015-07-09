@@ -1,2 +1,7 @@
 .joblib/
+*pyc
+build/
+dist/
+*.egg*
+kegg_cache/
 *txt

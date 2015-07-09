@@ -1,0 +1,82 @@
+#!/usr/bin/env python
+
+"""
+kg
+
+Get KEGG data from the command line.
+(Visit github.com/endrebak/kg for examples and help.)
+
+Usage:
+    kg --help
+    kg --mergecol=COL --species=SPEC [--genes] [--definitions] [--noheader] FILE
+    kg --species=SPEC
+    kg --removecache
+
+Arguments:
+    FILE                    infile to add KEGG data to (read STDIN with -)
+    -s SPEC --species=SPEC  name of species (examples: hsa, mmu, rno...)
+    -m COL  --mergecol=COL  column (0-indexed int or name) containing gene names
+
+Options:
+    -h --help               show this message
+    -n --noheader           the input data does not contain a header
+    -d --definitions        add KEGG pathway definitions to the output
+    -g --genes              get the genes related to KEGG pathways
+                            (when used, mergecol COL should contain KEGG pathway
+                            ids)
+    --removecache           removes the local cache so that the KEGG REST DB is
+                            accessed anew
+
+Examples:
+
+    Write all KEGG info to STDOUT for "Rattus Norvegicus":
+
+        kg --species rno
+
+    Get all human pathways associated with the genes in column called "Gene" in
+    test.txt, merge them to the file, add pathway definitions and write to STDOUT
+
+        kg -s hsa -m Gene -d test.txt
+
+"""
+
+
+from __future__ import print_function
+
+from sys import stdout, exit as sys_exit
+from docopt import docopt
+
+from ebs.read_indata import read_indata
+from ebs.merge_cols import attach_data
+from ebs.args import remove_dashes_from_docopt_argument_names
+
+from kegg.lib import get_kegg, remove_cache
+
+
+if __name__ == '__main__':
+    args = remove_dashes_from_docopt_argument_names(docopt(__doc__))
+    # load cl-args into local namespace # pylint: disable=E0602
+    locals().update(args)
+
+    if removecache:
+        remove_cache()
+        sys_exit(0)
+
+    kegg_df = get_kegg(species)
+
+    # no file to merge on; just dump KEGG data to stdout
+    if FILE is None:
+        kegg_df.to_csv(stdout, sep="\t", index=False)
+        sys_exit(0)
+
+    input_df = read_indata(FILE, noheader)
+
+    if not definitions:
+        kegg_df.drop("kegg_definition", axis=1)
+
+    kegg_df_col_to_merge_on = "kegg_pathway" if genes else "gene"
+
+    final_df = attach_data(input_df, kegg_df, mergecol,
+                           kegg_df_col_to_merge_on)
+
+    final_df.to_csv(stdout, sep="\t", index=False, header=not noheader)
