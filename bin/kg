@@ -48,13 +48,13 @@ from docopt import docopt
 
 from ebs.read_indata import read_indata
 from ebs.merge_cols import attach_data
-from ebs.args import remove_dashes_from_docopt_argument_names
+from ebs.args import turn_docopt_arg_names_into_valid_var_names
 
 from kegg.lib import get_kegg, remove_cache
 
 
 if __name__ == '__main__':
-    args = remove_dashes_from_docopt_argument_names(docopt(__doc__))
+    args = turn_docopt_arg_names_into_valid_var_names(docopt(__doc__))
     # load cl-args into local namespace # pylint: disable=E0602
     locals().update(args)
 
