@@ -1,6 +1,7 @@
 
 import re
 from shutil import rmtree
+from os.path import expanduser, join as path_join
 
 from pandas import DataFrame
 from Bio.KEGG import REST
@@ -9,6 +10,7 @@ from Bio.KEGG import REST
 from joblib import Memory
 
 
+default_cache_path = path_join(expanduser("~"), ".kegg/")
 memory = Memory(cachedir="kegg_cache", verbose=0)
 
 @memory.cache(verbose=0)
@@ -42,4 +44,4 @@ def _get_rowdicts(species, kegg_list):
 
 
 def remove_cache():
-    rmtree("kegg_cache")
+    rmtree(default_cache_path)
