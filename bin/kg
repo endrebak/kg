@@ -72,7 +72,7 @@ if __name__ == '__main__':
     input_df = read_indata(FILE, noheader)
 
     if not definitions:
-        kegg_df.drop("kegg_definition", axis=1)
+        kegg_df = kegg_df.drop("kegg_definition", axis=1)
 
     kegg_df_col_to_merge_on = "kegg_pathway" if genes else "gene"
 

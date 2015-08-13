@@ -1,6 +1,9 @@
 # kg
 Query KEGG from the command line
 
+# Bug
+Note that there is a bug that causes kg to return invalid kegg path ids; see the example below. My mistake; I was using undocumented BioPython code to do this, and I just assumed that the numbers were pathway IDs. This is the first thing on my TODO-list - expect a correction next week, around Monday the 17. of August.
+
 ```
 kg
 
