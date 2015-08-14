@@ -8,8 +8,8 @@ Get KEGG data from the command line.
 
 Usage:
     kg --help
-    kg --mergecol=COL --species=SPEC [--genes] [--definitions] [--noheader] [--verbose] FILE
-    kg --species=SPEC [--definitions] [--verbose]
+    kg --mergecol=COL --species=SPEC [--genes] [--definitions] [--noheader] [--quiet] FILE
+    kg --species=SPEC [--definitions] [--quiet]
     kg --removecache
 
 Arguments:
@@ -19,7 +19,7 @@ Arguments:
 
 Options:
     -h --help               show this message
-    -v --verbose            show progress messages on stderr
+    -q --quiet              do not show progress messages on stderr
     -n --noheader           the input data does not contain a header
     -d --definitions        add KEGG pathway definitions to the output
     -g --genes              get the genes related to KEGG pathways
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     locals().update(args)
 
 
-    if verbose:
+    if not quiet:
         logging.basicConfig(level=logging.INFO, format='%(message)s (Time: '\
                             ' %(asctime)s )',
                             datefmt='%a, %d %b %Y %H:%M:%S', stream=stderr)
