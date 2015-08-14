@@ -8,8 +8,8 @@ Get KEGG data from the command line.
 
 Usage:
     kg --help
-    kg --mergecol=COL --species=SPEC [--genes] [--definitions] [--noheader] FILE
-    kg --species=SPEC
+    kg --mergecol=COL --species=SPEC [--genes] [--definitions] [--noheader] [--verbose] FILE
+    kg --species=SPEC [--definitions] [--verbose]
     kg --removecache
 
 Arguments:
@@ -19,6 +19,7 @@ Arguments:
 
 Options:
     -h --help               show this message
+    -v --verbose            show progress messages on stderr
     -n --noheader           the input data does not contain a header
     -d --definitions        add KEGG pathway definitions to the output
     -g --genes              get the genes related to KEGG pathways
@@ -43,14 +44,16 @@ Examples:
 
 from __future__ import print_function
 
-from sys import stdout, exit as sys_exit
+from sys import stdout, stderr, exit as sys_exit
+import logging
+
 from docopt import docopt
 
 from ebs.read_indata import read_indata
 from ebs.merge_cols import attach_data
 from ebs.args import turn_docopt_arg_names_into_valid_var_names
 
-from kegg.lib import get_kegg, remove_cache
+from kegg.lib import get_kegg, remove_cache, default_cache_path
 
 
 if __name__ == '__main__':
@@ -58,11 +61,20 @@ if __name__ == '__main__':
     # load cl-args into local namespace # pylint: disable=E0602
     locals().update(args)
 
+
+    if verbose:
+        logging.basicConfig(level=logging.INFO, format='%(message)s (Time: '\
+                            ' %(asctime)s )',
+                            datefmt='%a, %d %b %Y %H:%M:%S', stream=stderr)
+
+    logging.info("Cache path is: {}".format(default_cache_path))
+
     if removecache:
+        logging.info("Removing cache in: {}".format(default_cache_path))
         remove_cache()
         sys_exit(0)
 
-    kegg_df = get_kegg(species)
+    kegg_df = get_kegg(species, definitions)
 
     # no file to merge on; just dump KEGG data to stdout
     if FILE is None:
@@ -70,9 +82,6 @@ if __name__ == '__main__':
         sys_exit(0)
 
     input_df = read_indata(FILE, noheader)
-
-    if not definitions:
-        kegg_df = kegg_df.drop("kegg_definition", axis=1)
 
     kegg_df_col_to_merge_on = "kegg_pathway" if genes else "gene"
 
