@@ -1,15 +1,17 @@
 # kg
 
-kg is a Python CLI/API that enables retrieving KEGG pathways, their definitions,
+kg is a simple Python CLI and API that enables retrieving KEGG pathways, their definitions
 and their related genes.
 
-##Changelog
+### Changelog
 
 ```
 # 0.0.7 (05.11.2015)
 - Now uses entrezgene instead of ambiguous gene names.
 - Add version info (kg -v).
 ```
+
+### CLI
 
 ```
 kg
@@ -41,7 +43,7 @@ Options:
                             accessed anew
 ```
 
-### CLI
+### Command line example
 
 ```bash
 kg -s rno -d | head
@@ -62,7 +64,7 @@ As you can see above:
 * When several pathways are associated with a gene, that gene row is duplicated
 * `kg` supports `R style ".tsv"` files where the index column lacks a header
 
-### API
+### API example
 
 ```python
 from kegg.lib import get_kegg_data
