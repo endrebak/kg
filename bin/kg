@@ -15,10 +15,11 @@ Usage:
 Arguments:
     FILE                    infile to add KEGG data to (read STDIN with -)
     -s SPEC --species=SPEC  name of species (examples: hsa, mmu, rno...)
-    -m COL --mergecol=COL  column (0-indexed int or name) containing gene names
+    -m COL --mergecol=COL   column (0-indexed int or name) containing gene names
 
 Options:
     -h --help               show this message
+    -v --version            show version info
     -q --quiet              do not show progress messages on stderr
     -n --noheader           the input data does not contain a header
     -d --definitions        add KEGG pathway definitions to the output
@@ -53,11 +54,12 @@ from ebs.read_indata import read_indata
 from ebs.merge_cols import attach_data
 from ebs.args import turn_docopt_arg_names_into_valid_var_names
 
-from kegg.lib import get_kegg, remove_cache, default_cache_path
+from kegg.lib import get_kegg_data, remove_cache, default_cache_path
+from kegg.version import __version__
 
 
 if __name__ == '__main__':
-    args = turn_docopt_arg_names_into_valid_var_names(docopt(__doc__))
+    args = turn_docopt_arg_names_into_valid_var_names(docopt(__doc__, version=__version__))
     # load cl-args into local namespace # pylint: disable=E0602
     locals().update(args)
 
@@ -74,7 +76,7 @@ if __name__ == '__main__':
         remove_cache()
         sys_exit(0)
 
-    kegg_df = get_kegg(species, definitions)
+    kegg_df = get_kegg_data(species, definitions)
 
     # no file to merge on; just dump KEGG data to stdout
     if FILE is None:
@@ -83,7 +85,7 @@ if __name__ == '__main__':
 
     input_df = read_indata(FILE, noheader)
 
-    kegg_df_col_to_merge_on = "kegg_pathway" if genes else "gene"
+    kegg_df_col_to_merge_on = "kegg_pathway" if genes else "entrezgene"
 
     final_df = attach_data(input_df, kegg_df, mergecol,
                            kegg_df_col_to_merge_on)

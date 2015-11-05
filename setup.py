@@ -1,17 +1,18 @@
 from setuptools import setup
+from kegg.version import __version__
 
 setup(
     name = "kg",
     packages = ["kegg"],
     scripts = ["bin/kg"],
-    version = "0.0.5",
+    version = __version__,
     description = "Access KEGG from the command line.",
     author = "Endre Bakken Stovner",
     author_email = "endrebak@stud.ntnu.no",
     url = "http://github.com/endrebak/kg",
     keywords = ["KEGG", "Kyoto Encyclopedia of Genes and Genomes"],
     license = ["GPL-3.0"],
-    install_requires = ["pandas>=0.16", "biopython>=1.65", "ebs", "docopt",
+    install_requires = ["pandas>=0.16", "biopython>=1.65", "ebs>=0.0.8", "docopt",
                         "joblib"],
     classifiers = [
         "Programming Language :: Python :: 2.7",

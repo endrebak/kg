@@ -18,27 +18,18 @@ memory = Memory(cachedir=default_cache_path, verbose=0)
 
 
 @memory.cache(verbose=0)
-def get_kegg(species, definitions):
-
-    logging.info("Get KEGG gene to external gene map.")
-    gene_map = get_kegg_gene_to_external_map(species)
+def get_kegg_data(species, definitions):
 
     logging.info("Get KEGG path to gene map.")
-    pathway_map = get_kegg_path_to_gene_map(species)
+    kegg_df = get_kegg_path_to_gene_map(species)[["kegg_pathway", "entrezgene"]]
 
     if definitions:
         logging.info("Get KEGG pathway to definition map.")
         definition_map = get_pathway_to_definition_map(species)
 
-    logging.info("Connect KEGG gene map and KEGG pathway map.")
-    kegg_df = attach_data(pathway_map, gene_map, "kegg_gene", "kegg_gene")
-    kegg_df = kegg_df[["kegg_pathway", "gene"]]
-
-    if definitions:
         logging.info("Attaching pathway definitions.")
         kegg_df = attach_data(kegg_df, definition_map, "kegg_pathway",
                               "kegg_pathway")
-        kegg_df = kegg_df[["kegg_pathway", "gene", "kegg_pathway_definition"]]
 
     return kegg_df
 
@@ -67,7 +58,9 @@ def get_pathway_to_definition_map(species):
 @memory.cache(verbose=0)
 def get_kegg_gene_to_external_map(species):
 
-    """Maps kegg genes to external gene names."""
+    """Maps kegg genes to external gene names.
+
+    Legacy function for goverlap. Deprecated. """
 
     kegg_list = REST.kegg_list(species)
 
@@ -81,7 +74,7 @@ def get_kegg_gene_to_external_map(species):
         kegg_data = re.findall(parse_kegg_info, kegg_info)
 
         for gene in kegg_data[1].split(", "):
-            rowdict = {"kegg_gene": kegg_data[0], "gene": gene}
+            rowdict = {"entrezgene": kegg_data[0], "gene": gene}
             rowdicts.append(rowdict)
 
     return DataFrame.from_dict(rowdicts)
@@ -102,7 +95,7 @@ def get_kegg_path_to_gene_map(species):
         kegg_info = re.sub(clean_kegg_path_to_gene, "", kegg_info)
         kegg_data = kegg_info.split("\t")
 
-        rowdict = {"kegg_pathway": kegg_data[0], "kegg_gene": kegg_data[1]}
+        rowdict = {"kegg_pathway": kegg_data[0], "entrezgene": kegg_data[1]}
         rowdicts.append(rowdict)
 
     return DataFrame.from_dict(rowdicts)
@@ -110,3 +103,33 @@ def get_kegg_path_to_gene_map(species):
 
 def remove_cache():
     rmtree(default_cache_path)
+
+
+
+
+@memory.cache(verbose=0)
+def get_kegg(species, definitions):
+
+    """Legacy function for goverlap. Deprecated. """
+
+    logging.info("Get KEGG gene to external gene map.")
+    gene_map = get_kegg_gene_to_external_map(species)
+
+    logging.info("Get KEGG path to gene map.")
+    pathway_map = get_kegg_path_to_gene_map(species)
+
+    if definitions:
+        logging.info("Get KEGG pathway to definition map.")
+        definition_map = get_pathway_to_definition_map(species)
+
+    logging.info("Connect KEGG gene map and KEGG pathway map.")
+    kegg_df = attach_data(pathway_map, gene_map, "entrezgene", "entrezgene")
+    kegg_df = kegg_df[["kegg_pathway", "gene"]]
+
+    if definitions:
+        logging.info("Attaching pathway definitions.")
+        kegg_df = attach_data(kegg_df, definition_map, "kegg_pathway",
+                              "kegg_pathway")
+        kegg_df = kegg_df[["kegg_pathway", "gene", "kegg_pathway_definition"]]
+
+    return kegg_df
