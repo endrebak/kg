@@ -12,7 +12,7 @@ setup(
     url = "http://github.com/endrebak/kg",
     keywords = ["KEGG", "Kyoto Encyclopedia of Genes and Genomes"],
     license = ["GPL-3.0"],
-    install_requires = ["pandas>=0.16", "biopython>=1.65", "ebs>=0.0.8", "docopt",
+    install_requires = ["pandas>=0.16", "biopython>=1.65", "ebs>=0.0.9", "docopt",
                         "joblib"],
     classifiers = [
         "Programming Language :: Python :: 2.7",
