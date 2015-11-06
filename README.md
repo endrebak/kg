@@ -6,7 +6,8 @@ and their related genes.
 ### Changelog
 
 ```
-# 0.0.7 (05.11.2015)
+# 0.0.8 (06.11.2015)
+- Fix sort bug
 - Now uses entrezgene instead of ambiguous gene names.
 - Add version info (kg -v).
 ```
