@@ -3,6 +3,8 @@
 kg is a simple Python CLI and API that enables retrieving KEGG pathways, their definitions
 and their related genes.
 
+It is tested on both Python 2.7 and Python 3+.
+
 ### Changelog
 
 ```
