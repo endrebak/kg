@@ -90,11 +90,6 @@ df.head(5)
 # 4        00010  100911625  Glycolysis / Gluconeogenesis
 ```
 
-### Gene names
-
-The gene names returned by `kg` are of the type entrezgene.
-If you'd like a different type of gene identifier, please use [biomartian](https://github.com/endrebak/biomartian) to convert them.
-
 ### Install
 
 ```bash
