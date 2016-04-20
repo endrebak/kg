@@ -8,6 +8,10 @@ It is tested on both Python 2.7 and Python 3+.
 ### Changelog
 
 ```
+# 0.0.10 (01.04.2016)
+- Fix error when input file only contains one line.
+- Change cache dir to ~/.joblib/kegg
+
 # 0.0.8 (06.11.2015)
 - Fix sort bug
 - Now uses entrezgene instead of ambiguous gene names.

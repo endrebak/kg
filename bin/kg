@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 """
 kg
 
@@ -39,9 +38,7 @@ Examples:
     test.txt, merge them to the file, add pathway definitions and write to STDOUT
 
         kg -s hsa -m Gene -d test.txt
-
 """
-
 
 from __future__ import print_function
 
@@ -57,12 +54,12 @@ from ebs.args import turn_docopt_arg_names_into_valid_var_names
 from kegg.lib import get_kegg_data, remove_cache, default_cache_path
 from kegg.version import __version__
 
-
 if __name__ == '__main__':
-    args = turn_docopt_arg_names_into_valid_var_names(docopt(__doc__, version=__version__))
+    args = turn_docopt_arg_names_into_valid_var_names(
+        docopt(__doc__,
+               version=__version__))
     # load cl-args into local namespace # pylint: disable=E0602
     locals().update(args)
-
 
     if not quiet:
         logging.basicConfig(level=logging.INFO, format='%(message)s (Time: '\

@@ -1,4 +1,3 @@
-
 import re
 from shutil import rmtree
 from os.path import expanduser, join as path_join
@@ -6,14 +5,12 @@ from os.path import expanduser, join as path_join
 from pandas import DataFrame
 from Bio.KEGG import REST
 
-
 import logging
 from ebs.merge_cols import attach_data
 
 from joblib import Memory
 
-
-default_cache_path = path_join(expanduser("~"), ".kegg/")
+default_cache_path = path_join(expanduser("~"), ".joblib/kegg/")
 memory = Memory(cachedir=default_cache_path, verbose=0)
 
 
@@ -21,7 +18,8 @@ memory = Memory(cachedir=default_cache_path, verbose=0)
 def get_kegg_data(species, definitions):
 
     logging.info("Get KEGG path to gene map.")
-    kegg_df = get_kegg_path_to_gene_map(species)[["kegg_pathway", "entrezgene"]]
+    kegg_df = get_kegg_path_to_gene_map(species)[["kegg_pathway", "entrezgene"
+                                                  ]]
 
     if definitions:
         logging.info("Get KEGG pathway to definition map.")
@@ -33,9 +31,9 @@ def get_kegg_data(species, definitions):
 
     return kegg_df
 
+
 @memory.cache(verbose=0)
 def get_pathway_to_definition_map(species):
-
     """Map kegg paths to their definition."""
 
     kegg_list = REST.kegg_list("pathway", species)
@@ -48,9 +46,9 @@ def get_pathway_to_definition_map(species):
         kegg_path_line = kegg_path_line.decode("utf-8")
         kegg_info = re.sub(clean_kegg_path, "", kegg_path_line)
         pathway, definition = kegg_info.split("\t")
-        definition = definition.split(" - ")[0] # Remove species info
-        rowdict = {"kegg_pathway": pathway, "kegg_pathway_definition":
-                   definition}
+        definition = definition.split(" - ")[0]  # Remove species info
+        rowdict = {"kegg_pathway": pathway,
+                   "kegg_pathway_definition": definition}
         rowdicts.append(rowdict)
 
     return DataFrame.from_dict(rowdicts)
@@ -58,7 +56,6 @@ def get_pathway_to_definition_map(species):
 
 @memory.cache(verbose=0)
 def get_kegg_gene_to_external_map(species):
-
     """Maps kegg genes to external gene names.
 
     Legacy function for goverlap. Deprecated. """
@@ -84,7 +81,6 @@ def get_kegg_gene_to_external_map(species):
 
 @memory.cache(verbose=0)
 def get_kegg_path_to_gene_map(species):
-
     """Map kegg paths to genes."""
 
     kegg_list = REST.kegg_link(species, "pathway")
@@ -108,11 +104,8 @@ def remove_cache():
     rmtree(default_cache_path)
 
 
-
-
 @memory.cache(verbose=0)
 def get_kegg(species, definitions):
-
     """Legacy function for goverlap. Deprecated. """
 
     logging.info("Get KEGG gene to external gene map.")
