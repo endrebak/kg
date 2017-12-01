@@ -8,6 +8,8 @@ It is tested on both Python 2.7 and Python 3+.
 ### Changelog
 
 ```
+# 0.0.11 (1.12.2017)
+- Fix bug due to underlying API changes
 # 0.0.10 (01.04.2016)
 - Fix error when input file only contains one line.
 - Change cache dir to ~/.joblib/kegg

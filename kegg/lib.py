@@ -43,7 +43,11 @@ def get_pathway_to_definition_map(species):
     rowdicts = []
     for kegg_path_line in kegg_list:
 
-        kegg_path_line = kegg_path_line.decode("utf-8")
+        try:
+            kegg_path_line = kegg_path_line.decode("utf-8")
+        except AttributeError:
+            pass
+
         kegg_info = re.sub(clean_kegg_path, "", kegg_path_line)
         pathway, definition = kegg_info.split("\t")
         definition = definition.split(" - ")[0]  # Remove species info
@@ -68,7 +72,10 @@ def get_kegg_gene_to_external_map(species):
     rowdicts = []
     for kegg_info in kegg_list:
 
-        kegg_info = kegg_info.decode("utf-8")
+        try:
+            kegg_info = kegg_info.decode("utf-8")
+        except AttributeError:
+            pass
         kegg_info = re.sub(clean_kegg_info, "", kegg_info)
         kegg_data = re.findall(parse_kegg_info, kegg_info)
 
@@ -90,7 +97,10 @@ def get_kegg_path_to_gene_map(species):
     rowdicts = []
     for kegg_info in kegg_list:
 
-        kegg_info = kegg_info.decode("utf-8")
+        try:
+            kegg_info = kegg_info.decode("utf-8")
+        except AttributeError:
+            pass
         kegg_info = re.sub(clean_kegg_path_to_gene, "", kegg_info)
         kegg_data = kegg_info.split("\t")
 
