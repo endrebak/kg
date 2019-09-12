@@ -1,5 +1,7 @@
 # kg
 
+kg is no longer maintained :) Provided as is. Feel free to fork it :)
+
 kg is a simple Python CLI and API that enables retrieving KEGG pathways, their definitions
 and their related genes.
 
